@@ -9,6 +9,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 
+/**
+ * Base class for all DAO objects to work with <code>HSQLDB In-Progress</code> and entities, which object type is <code>T</code>
+ * @param <T> is entity object type
+ */
 public abstract class AbstractHSQLDBInProgressDAO<T> implements DAO<T> {
     private static final String DB_LOGIN = "SA";
     private static final String DB_PASSWORD = "";
@@ -33,6 +37,8 @@ public abstract class AbstractHSQLDBInProgressDAO<T> implements DAO<T> {
 
     /**
      * creates SEQUENCE for generating entities id if its not exist
+     * @throws SQLException if some problems with DB
+     * @throws IOException if scripts files not found
      */
     protected void createIdSequence() throws SQLException, IOException {
         try {
@@ -66,6 +72,17 @@ public abstract class AbstractHSQLDBInProgressDAO<T> implements DAO<T> {
 
     }
 
+    /**
+     * Checks existing of Data Base Object in Data Base
+     * @param checkingScriptFileName is script file which contains <code>SELECT _OBJECT_TYPE_COLUMN_ FROM INFORMATION_SCHEMA._OBJECT_TYPE_</code> script
+     *                               where <code>_OBJECT__TYPE_COLUMN_</code> is object type column name and <code>_OBJECT_TYPE_</code> is type of the desired object, for example if You're checking existing of
+     *                               <code>SEQUENCE</code> You need to specify <code>SELECT SEQUENCE_NAME FROM INFORMATION_SCHEMA.SEQUENCES</code>
+     * @param dataBaseObjectName is name of the object which you're checking for the existence
+     * @return <code>true</code> if object was found
+     * @return <code>false</code> if object wasn't found
+     * @throws SQLException in case of some problems with DB
+     * @throws IOException in case of specified file does not exist or some problems during reading this one
+     */
     protected boolean dataBaseObjectExists(String checkingScriptFileName, String dataBaseObjectName) throws SQLException, IOException {
         String sql = "";
         try {
@@ -110,10 +127,8 @@ public abstract class AbstractHSQLDBInProgressDAO<T> implements DAO<T> {
 
     /**
      *@param sqlFileName is script file location
-     *@throws RuntimeException which can wrap one of
-     * java.io.FileNotFoundException,
-     * java.io.IOException,
-     * java.sql.SQLException
+     * @throws SQLException in case of some problems with DB
+     * @throws IOException in case of specified file does not exist or some problems during reading this one
     */
     protected void executeDDLScriptFromFile(String sqlFileName) throws SQLException, IOException {
         String sql = "";
@@ -144,6 +159,11 @@ public abstract class AbstractHSQLDBInProgressDAO<T> implements DAO<T> {
         }
     }
 
+    /**
+     * provides the connection to DB which needs to be closed after using
+     * @return <code>Connection</code> object which needs to be closed after using
+     * @throws SQLException in case of some problems with DB
+     */
     protected Connection getConnection() throws SQLException {
         log.debug("getConnection for HSQLDB In-Progress started");
         try {

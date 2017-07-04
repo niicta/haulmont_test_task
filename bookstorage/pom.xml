@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.niicta</groupId>
-	<artifactId>book-store</artifactId>
+	<artifactId>book-storage</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
 	<name>book-storage</name>
