@@ -17,7 +17,7 @@ import com.niicta.view.windows.About;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.View;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.MarginInfo;
@@ -25,7 +25,6 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar;
 
 import javax.servlet.annotation.WebServlet;
-import java.awt.*;
 
 //import com.vaadin.cdi.CDIUI;
 
@@ -38,7 +37,7 @@ import java.awt.*;
  */
 @Theme("mytheme")
 @SuppressWarnings("serial")
-public class MyUI extends UI {
+public class MainUI extends UI {
     VerticalLayout mainLayout;
     MenuBar menuBar;
     VerticalLayout viewLayout;
@@ -48,6 +47,7 @@ public class MyUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        Page.getCurrent().setTitle("Book Storage");
         modelFactory = ModelFactoryProvider.getProvider().getDefaultModelFactory();
         daoFactory = DAOFactoryProvider.getProvider().getDefaultDAOFactory();
         DAO<Author> authorDAO = daoFactory.createAuthorDAO(modelFactory);
@@ -113,7 +113,7 @@ public class MyUI extends UI {
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    @VaadinServletConfiguration(ui = MainUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
 }

@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * this is not functional UI, but only for debugging
+ */
 @Theme("mytheme")
 @SuppressWarnings("serial")
 public class DebugUI extends UI implements Updatable {
@@ -220,8 +223,8 @@ public class DebugUI extends UI implements Updatable {
 
 
 
-    @WebServlet(urlPatterns = "/debug/*", name = "DebugUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = DebugUI.class, productionMode = false)
-    public static class DebugUIServlet extends VaadinServlet {
-    }
+//    @WebServlet(urlPatterns = "/debug/*", name = "DebugUIServlet", asyncSupported = true)
+//    @VaadinServletConfiguration(ui = DebugUI.class, productionMode = false)
+//    public static class DebugUIServlet extends VaadinServlet {
+//    }
 }
