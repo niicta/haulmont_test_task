@@ -28,6 +28,7 @@ public class EditGenreWindow extends AbstractEditWindow<Genre> {
     void initBinder() {
         binder.forField(nameField)
                 .asRequired("Genre's name can't be empty")
+                .withValidator(new FieldLettersValidator())
                 .bind(Genre::getName, Genre::setName);
     }
 

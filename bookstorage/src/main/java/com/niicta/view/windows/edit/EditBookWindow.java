@@ -26,6 +26,8 @@ public class EditBookWindow extends AbstractEditWindow<Book> implements Updatabl
     private ComboBox<Book.Publisher> publisherBox;
     private DAO<Author> authorDAO;
     private DAO<Genre> genreDAO;
+    private boolean updateAuthors;
+    private boolean updateGenres;
 
     public EditBookWindow(DAO<Book>  bookDAO, ModelFactory modelFactory, Updatable root){
         super(bookDAO, modelFactory, root, CAPTION);
@@ -38,10 +40,16 @@ public class EditBookWindow extends AbstractEditWindow<Book> implements Updatabl
     @Override
     public void update() {
         try {
-            authorBox.setItems(authorDAO.findAll());
-            authorBox.setItemCaptionGenerator(Author::getAuthorCode);
-            genreBox.setItems(genreDAO.findAll());
-            genreBox.setItemCaptionGenerator(Genre::getName);
+            if (updateAuthors) {
+                authorBox.setItems(authorDAO.findAll());
+                authorBox.setItemCaptionGenerator(Author::getAuthorCode);
+                updateAuthors = false;
+            }
+            if (updateGenres) {
+                genreBox.setItems(genreDAO.findAll());
+                genreBox.setItemCaptionGenerator(Genre::getName);
+                updateGenres = false;
+            }
         } catch (SQLException | IOException e) {
             Notification.show("Oops! Looks like we have some problems with database\n"
                     + "please, contact your administrator and try again later");
@@ -59,6 +67,7 @@ public class EditBookWindow extends AbstractEditWindow<Book> implements Updatabl
             public void buttonClick(Button.ClickEvent clickEvent) {
                 EditAuthorWindow editAuthorWindow = new EditAuthorWindow(authorDAO, modelFactory, EditBookWindow.this);
                 UI.getCurrent().addWindow(editAuthorWindow);
+                updateAuthors = true;
             }
         });
         genreBox = new ComboBox<>("Genre: ");
@@ -67,6 +76,7 @@ public class EditBookWindow extends AbstractEditWindow<Book> implements Updatabl
             public void buttonClick(Button.ClickEvent clickEvent) {
                 EditGenreWindow editGenreWindow = new EditGenreWindow(genreDAO, modelFactory, EditBookWindow.this);
                 UI.getCurrent().addWindow(editGenreWindow);
+                updateGenres = true;
             }
         });
         dateField = new DateField("Publish Year: ");
@@ -75,6 +85,8 @@ public class EditBookWindow extends AbstractEditWindow<Book> implements Updatabl
         publisherBox = new ComboBox<>("Publisher");
         publisherBox.setItems(Book.Publisher.values());
         publisherBox.setItemCaptionGenerator(Book.Publisher::getValue);
+        updateGenres = true;
+        updateAuthors = true;
         update();
         dateField.setResolution(DateResolution.YEAR);
         layout.addComponents(nameField, authorBox, newAuthor, genreBox, newGenre, dateField, cityField, publisherBox, dateField);
@@ -96,6 +108,7 @@ public class EditBookWindow extends AbstractEditWindow<Book> implements Updatabl
                 .bind(Book::getYear, Book::setYear);
         binder.forField(cityField)
                 .asRequired("Book's city can't be empty")
+                .withValidator(new FieldLettersValidator())
                 .bind(Book::getCity, Book::setCity);
 //        binder.forField(countField)
 //                .asRequired("Book's count can't be empty")

@@ -1,4 +1,4 @@
-Test Task by Nikita krasnopolsky
+Test Task by Nikita Krasnopolsky
 =========
 
 Prerequisites
